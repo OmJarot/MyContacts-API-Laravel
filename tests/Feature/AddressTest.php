@@ -219,5 +219,29 @@ class AddressTest extends TestCase
             ]);
     }
 
+    public function testDeleteSuccess(): void {
+        $this->seed([UserSeeder::class, ContactSeeder::class, AddressSeeder::class]);
+
+        $address = Address::query()->first();
+        $this->delete("/api/contacts/$address->contact_id/addresses/$address->id", headers: ["Authorization" => "test"])
+            ->assertStatus(200)
+            ->assertJson([
+                "data" => true
+            ]);
+    }
+
+    public function testDeleteNotFound(): void {
+        $this->seed([UserSeeder::class, ContactSeeder::class, AddressSeeder::class]);
+
+        $address = Address::query()->first();
+        $this->delete("/api/contacts/$address->contact_id/addresses/".($address->id+1), headers: ["Authorization" => "test"])
+            ->assertStatus(404)
+            ->assertJson([
+                "errors" => [
+                    "message" => ["Not found"]
+                ]
+            ]);
+    }
+
 
 }

@@ -50,6 +50,18 @@ class AddressController extends Controller
         return new AddressResource($address);
     }
 
+    function delete(int $idContact, int $idAddress): JsonResponse {
+        $user = Auth::user();
+
+        $contact = $this->getContact($user, $idContact);
+        $address = $this->getAddress($contact, $idAddress);
+
+        $address->delete();
+        return response()->json([
+            "data" => true
+        ])->setStatusCode(200);
+    }
+
     private function getContact(User $user, int $idContact): Contact {
         $contact = Contact::query()->where("user_id", "=", $user->id)->where("id", "=", $idContact)->first();
         if (!isset($contact)){
@@ -78,7 +90,4 @@ class AddressController extends Controller
         return $address;
     }
 
-    function delete() {
-
-    }
 }
