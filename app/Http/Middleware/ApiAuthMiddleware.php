@@ -34,7 +34,6 @@ class ApiAuthMiddleware
         if ($authenticate){
             return $next($request);
         }else{
-            Log::info("false");
             return \response()->json([
                 "errors" => [
                     "message" => [
