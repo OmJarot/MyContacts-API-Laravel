@@ -11,7 +11,7 @@
         }
     ],
     "paths": {
-        "/api/users/register" : {
+        "/api/users" : {
             "post" : {
                 "description": "User register",
                 "requestBody": {
