@@ -20,7 +20,9 @@ Route::middleware(ApiAuthMiddleware::class)->group(function (){
     Route::delete("/users/logout", [UserController::class, "logout"]);
 
     Route::post("/contacts", [ContactController::class, "create"]);
+    Route::delete("/contacts", [ContactController::class, "search"]);
     Route::get("/contacts/{id}", [ContactController::class, "get"])->where("id", "[0-9]+");
     Route::put("/contacts/{id}", [ContactController::class, "update"])->where("id", "[0-9]+");
+    Route::delete("/contacts/{id}", [ContactController::class, "delete"])->where("id", "[0-9]+");
 
 });

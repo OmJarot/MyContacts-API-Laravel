@@ -168,5 +168,33 @@ class ContactTest extends TestCase
             ]);
     }
 
+    public function testDeleteSuccess(): void {
+        $this->seed([UserSeeder::class, ContactSeeder::class]);
+        $contact = Contact::query()->first();
+
+        $this->delete("/api/contacts/$contact->id",
+            headers: ["Authorization" => "test"]
+        )->assertStatus(200)
+            ->assertJson([
+                "data" => true
+            ]);
+    }
+
+    public function testDeleteNotFound(): void {
+        $this->seed([UserSeeder::class, ContactSeeder::class]);
+        $contact = Contact::query()->first();
+
+        $this->delete("/api/contacts/".($contact->id+1),
+            headers: ["Authorization" => "test"]
+        )->assertStatus(404)
+            ->assertJson([
+                "errors" => [
+                    "message" => [
+                        "Not found"
+                    ]
+                ]
+            ]);
+    }
+
 
 }
