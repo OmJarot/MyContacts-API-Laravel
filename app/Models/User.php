@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class User extends Model
+class User extends Authenticatable
 {
     protected $table = "users";
     protected $primaryKey = "id";
@@ -21,5 +22,9 @@ class User extends Model
 
     function contacts(): HasMany {
         return $this->hasMany(Contact::class, "user_id", "id");
+    }
+
+    public function getRememberTokenName() {
+        return 'token';
     }
 }

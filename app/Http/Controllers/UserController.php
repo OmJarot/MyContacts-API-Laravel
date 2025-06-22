@@ -10,6 +10,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -51,6 +52,11 @@ class UserController extends Controller
         $user->token = Str::uuid()->toString();
         $user->save();
 
+        return new UserResource($user);
+    }
+
+    function get(Request $request): UserResource {
+        $user = Auth::user();
         return new UserResource($user);
     }
 }
