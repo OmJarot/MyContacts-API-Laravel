@@ -2,9 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Contact;
+use Database\Seeders\ContactSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class ContactTest extends TestCase
@@ -65,6 +68,55 @@ class ContactTest extends TestCase
                 "errors" => [
                     "message" => [
                         "unauthorized"
+                    ]
+                ]
+            ]);
+    }
+
+    public function testGetSuccess(): void {
+        $this->seed([UserSeeder::class, ContactSeeder::class]);
+        $contact = Contact::query()->first();
+
+        $this->get("/api/contacts/$contact->id",
+            headers: ["Authorization" => "test"]
+        )->assertStatus(200)
+            ->assertJson([
+                "data" => [
+                    "first_name" => "test",
+                    "last_name" => "test",
+                    "email" => "test@test.com",
+                    "phone" => "1234",
+                ]
+            ]);
+    }
+
+    public function testGetNotFound(): void {
+        $this->seed([UserSeeder::class, ContactSeeder::class]);
+        $contact = Contact::query()->first();
+
+        $this->get("/api/contacts/".($contact->id + 1),
+            headers: ["Authorization" => "test"]
+        )->assertStatus(404)
+            ->assertJson([
+                "errors" => [
+                    "message" => [
+                        "Not found"
+                    ]
+                ]
+            ]);
+    }
+
+    public function testGetOtherUserContact(): void {
+        $this->seed([UserSeeder::class, ContactSeeder::class]);
+        $contact = Contact::query()->first();
+
+        $this->get("/api/contacts/".$contact->id,
+            headers: ["Authorization" => "test2"]
+        )->assertStatus(404)
+            ->assertJson([
+                "errors" => [
+                    "message" => [
+                        "Not found"
                     ]
                 ]
             ]);
