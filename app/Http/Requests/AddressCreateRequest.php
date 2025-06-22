@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AddressCreateRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class AddressCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user() != null;
     }
 
     /**
@@ -22,7 +24,16 @@ class AddressCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "street" => ["nullable", "max:200"],
+            "city" => ["nullable", "max:100"],
+            "province" => ["nullable", "max:100"],
+            "country" => ["required", "max:100"],
+            "postal_code" => ["nullable", "max:10"]
         ];
+    }
+    protected function failedValidation(Validator $validator) {
+        throw new HttpResponseException(response([
+            "errors" => $validator->getMessageBag()
+        ], 400));
     }
 }
