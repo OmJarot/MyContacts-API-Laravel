@@ -61,6 +61,14 @@ class AddressController extends Controller
             "data" => true
         ])->setStatusCode(200);
     }
+    function list(int $idContact): JsonResponse {
+        $user = Auth::user();
+
+        $contact = $this->getContact($user, $idContact);
+
+        $addresses = Address::query()->where("contact_id", "=", $contact->id)->get();
+        return (AddressResource::collection($addresses))->response()->setStatusCode(200);
+    }
 
     private function getContact(User $user, int $idContact): Contact {
         $contact = Contact::query()->where("user_id", "=", $user->id)->where("id", "=", $idContact)->first();
