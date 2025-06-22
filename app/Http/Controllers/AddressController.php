@@ -77,4 +77,8 @@ class AddressController extends Controller
         }
         return $address;
     }
+
+    function delete() {
+
+    }
 }
