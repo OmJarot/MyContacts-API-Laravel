@@ -13,7 +13,7 @@ class ContactCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() != null;
+        return $this->user() != null;//user harus (sudah login) untuk hak akses nya
     }
 
     /**

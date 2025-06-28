@@ -13,7 +13,7 @@ class UserRegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return true;//bisa diakses tanpa login
     }
 
     /**
